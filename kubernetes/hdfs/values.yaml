@@ -39,8 +39,17 @@ namenode:
     lifelineRpc: 8022
   dataVolumes:
     count: 1
-    size: 10Gi
-    storageClassName: ""
+    pvcTemplateSpec:
+      storageClassName: null
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 10Gi
+  extraEnvVars: {}
+    # Example usage:
+    # HADOOP_HEAPSIZE_MIN: 128m
+    # hadoop.heapsize.min: 128m
 
 datanode:
   nodeCount: 3
@@ -63,9 +72,18 @@ datanode:
     data: 9866
     ipc: 9867
   dataVolumes:
-    count: 2
-    size: 10Gi
-    storageClassName: ""
+    count: 1
+    pvcTemplateSpec:
+      storageClassName: null
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 10Gi
+  extraEnvVars: {}
+    # Example usage:
+    # HADOOP_HEAPSIZE_MIN: 128m
+    # hadoop.heapsize.min: 128m
 
 shell:
   enabled: true
@@ -84,6 +102,9 @@ config:
   hdfsSite:
     dfs.replication: 3
     hadoop.security.authorization: true
+  rackAwareness:
+    serviceAccountName:
+    nodeTopologyLabel: topology.kubernetes.io/zone
 
 secrets:
   path: /etc/hadoop/secrets
@@ -95,7 +116,6 @@ fullnameOverride: ""
 ingress:
   enabled: true
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$1
     traefik.ingress.kubernetes.io/rule-type: PathPrefixStrip
   host: ""
   # For Traefik:
@@ -108,3 +128,6 @@ postInstallCommands: []
 # - hadoop fs -chown accumulo /accumulo
 # - hadoop fs -chmod 700 /accumulo
 # - hadoop fs -ls /
+
+networkPolicy:
+  enabled: true

@@ -1,7 +1,7 @@
 # Deploying Road Traffic Gaffer Graph on AWS EKS
 All scripts listed here are intended to be run from the kubernetes/gaffer-road-traffic folder
 
-First follow the [instructions here](../../aws-eks-deployment.md) to provision and configure an [AWS EKS](https://aws.amazon.com/eks/) cluster that the Gaffer Road Traffic Helm Chart can be deployed on.
+First follow the [instructions here](../../docs/aws-eks-deployment.md) to provision and configure an [AWS EKS](https://aws.amazon.com/eks/) cluster that the Gaffer Road Traffic Helm Chart can be deployed on.
 
 ## Using ECR
 If you are hosting the container images in your AWS account, using ECR, then run the following commands to configure the Helm Chart to use them:
@@ -16,9 +16,9 @@ else
   REPO_PREFIX="${ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/gchq"
 
   EXTRA_HELM_ARGS=""
-  EXTRA_HELM_ARGS+="--set gaffer.hdfs.namenode.repository=${REPO_PREFIX}/hdfs "
-  EXTRA_HELM_ARGS+="--set gaffer.hdfs.datanode.repository=${REPO_PREFIX}/hdfs "
-  EXTRA_HELM_ARGS+="--set gaffer.hdfs.shell.repository=${REPO_PREFIX}/hdfs "
+  EXTRA_HELM_ARGS+="--set gaffer.accumulo.hdfs.namenode.repository=${REPO_PREFIX}/hdfs "
+  EXTRA_HELM_ARGS+="--set gaffer.accumulo.hdfs.datanode.repository=${REPO_PREFIX}/hdfs "
+  EXTRA_HELM_ARGS+="--set gaffer.accumulo.hdfs.shell.repository=${REPO_PREFIX}/hdfs "
   EXTRA_HELM_ARGS+="--set gaffer.accumulo.image.repository=${REPO_PREFIX}/gaffer "
   EXTRA_HELM_ARGS+="--set gaffer.api.image.repository=${REPO_PREFIX}/gaffer-rest "
   EXTRA_HELM_ARGS+="--set loader.image.repository=${REPO_PREFIX}/gaffer-road-traffic-loader "
@@ -33,8 +33,9 @@ Finally, deploy the Helm Chart by running this from the kubernetes/gaffer-road-t
 
 ```
 export HADOOP_VERSION=${HADOOP_VERSION:-3.2.1}
-export GAFFER_VERSION=${GAFFER_VERSION:-1.12.0}
+export GAFFER_VERSION=${GAFFER_VERSION:-1.16.1}
 
+helm dependency update ../accumulo/
 helm dependency update ../gaffer/
 helm dependency update
 
