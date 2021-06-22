@@ -55,7 +55,7 @@ api:
   replicaCount: 1
   image:
     repository: gchq/gaffer-rest
-    tag: 1.16.1
+    tag: latest
     pullPolicy: IfNotPresent
     pullSecrets: []
   resources: {}
